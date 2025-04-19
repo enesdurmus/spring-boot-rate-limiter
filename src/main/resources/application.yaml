@@ -1,0 +1,7 @@
+spring:
+  application:
+    name: spring-boot-throttler
+
+throttler:
+  repository:
+    type: IN_MEMORY
