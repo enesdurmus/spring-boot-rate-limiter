@@ -8,9 +8,10 @@
 		<version>3.4.4</version>
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
-	<groupId>com.endu</groupId>
-	<artifactId>throttler</artifactId>
+	<groupId>com.endu.throttler</groupId>
+	<artifactId>spring-boot-throttler-parent</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
+	<packaging>pom</packaging>
 	<name>spring-boot-throttler</name>
 	<description>Spring boot throttler</description>
 	<url/>
@@ -20,6 +21,12 @@
 	<developers>
 		<developer/>
 	</developers>
+	<modules>
+		<module>spring-boot-throttler-core</module>
+		<module>spring-boot-throttler-inmemory</module>
+		<module>spring-boot-throttler-redis</module>
+		<module>spring-boot-throttler-demo</module>
+	</modules>
 	<scm>
 		<connection/>
 		<developerConnection/>
