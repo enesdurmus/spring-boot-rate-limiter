@@ -2,29 +2,50 @@ package com.endu.throttler.inmemory;
 
 import com.endu.throttler.RateLimitState;
 import com.endu.throttler.RateLimiterRepository;
+import com.github.benmanes.caffeine.cache.Cache;
+import com.github.benmanes.caffeine.cache.Caffeine;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Repository;
+
+import java.time.Duration;
+import java.util.Optional;
 
 @Repository
 class InMemoryRateLimiterRepository implements RateLimiterRepository {
 
-    @Override
-    public void save(String key, RateLimitState state) {
+    private static final Logger log = LoggerFactory.getLogger(InMemoryRateLimiterRepository.class);
 
+    private final Cache<String, RateLimitState> cache;
+
+    InMemoryRateLimiterRepository(@Value("${throttler.token-bucket.expire-after-access:PT10M}") Duration expireAfterAccess,
+                                  @Value("${throttler.token-bucket.maximum-size:10000}") int maximumSize) {
+        this.cache = Caffeine.newBuilder()
+                .expireAfterAccess(expireAfterAccess)
+                .maximumSize(maximumSize)
+                .build();
     }
 
     @Override
-    public RateLimitState obtain(String key) {
-        return null;
+    public void save(String key, RateLimitState state) {
+        log.debug("save key={} state={}", key, state);
+        cache.put(key, state);
+    }
+
+    @Override
+    public Optional<RateLimitState> get(String key) {
+        return Optional.ofNullable(cache.getIfPresent(key));
     }
 
     @Override
     public void delete(String key) {
-
+        cache.invalidate(key);
     }
 
     @Override
     public boolean exists(String key) {
-        return false;
+        return cache.getIfPresent(key) != null;
     }
 
 }

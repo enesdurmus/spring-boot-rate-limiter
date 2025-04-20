@@ -3,11 +3,15 @@ package com.endu.throttler.tokenbucket;
 import com.endu.throttler.RateLimitAlgorithm;
 import com.endu.throttler.RateLimiter;
 import com.endu.throttler.RateLimiterRepository;
-import org.springframework.beans.factory.annotation.Value;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
+import java.time.Duration;
 import java.time.Instant;
 
 public class TokenBucketRateLimiter implements RateLimiter {
+
+    private static final Logger log = LoggerFactory.getLogger(TokenBucketRateLimiter.class);
 
     private final RateLimiterRepository repository;
     private final int capacity;
@@ -15,8 +19,8 @@ public class TokenBucketRateLimiter implements RateLimiter {
 
     public TokenBucketRateLimiter(
             RateLimiterRepository repository,
-            @Value("${throttler.repository.type:IN_MEMORY}") int capacity,
-            @Value("${throttler.repository.type:IN_MEMORY}") long refillTokensPerSecond) {
+            int capacity,
+            long refillTokensPerSecond) {
         this.repository = repository;
         this.capacity = capacity;
         this.refillTokensPerSecond = refillTokensPerSecond;
@@ -24,8 +28,14 @@ public class TokenBucketRateLimiter implements RateLimiter {
 
     @Override
     public boolean isAllowed(String key) {
-        TokenBucketState bucket = (TokenBucketState) repository.obtain(key);
-        refill(bucket);
+        TokenBucketState bucket = repository.get(key)
+                .map(state -> refill((TokenBucketState) state))
+                .orElse(new TokenBucketState(
+                        capacity,
+                        Instant.now()
+                ));
+
+        log.debug("TokenBucket state for key {} is {}", key, bucket);
 
         if (bucket.getTokens() >= 1) {
             bucket.setTokens(bucket.getTokens() - 1);
@@ -41,11 +51,16 @@ public class TokenBucketRateLimiter implements RateLimiter {
         return RateLimitAlgorithm.TOKEN_BUCKET;
     }
 
-    private void refill(TokenBucketState bucket) {
+    private TokenBucketState refill(TokenBucketState bucket) {
         Instant now = Instant.now();
-        long secondsSinceLastRefill = (long) ((now.toEpochMilli() - bucket.getLastRefillTimestamp().toEpochMilli()) / 1000.0);
+        long secondsSinceLastRefill = Duration.between(bucket.getLastRefillTimestamp(), now).toSeconds();
         long tokensToAdd = secondsSinceLastRefill * refillTokensPerSecond;
-        bucket.setTokens(Math.min(capacity, bucket.getTokens() + tokensToAdd));
-        bucket.setLastRefillTimestamp(now);
+        log.debug("Refilling {} tokens to: {}", tokensToAdd, bucket);
+        if (tokensToAdd > 0) {
+            bucket.setTokens(Math.min(capacity, bucket.getTokens() + tokensToAdd));
+            bucket.setLastRefillTimestamp(now);
+        }
+        return bucket;
     }
+
 }

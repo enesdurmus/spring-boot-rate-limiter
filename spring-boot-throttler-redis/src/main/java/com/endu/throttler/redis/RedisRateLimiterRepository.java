@@ -4,6 +4,8 @@ import com.endu.throttler.RateLimitState;
 import com.endu.throttler.RateLimiterRepository;
 import org.springframework.stereotype.Repository;
 
+import java.util.Optional;
+
 @Repository
 class RedisRateLimiterRepository implements RateLimiterRepository {
 
@@ -13,7 +15,7 @@ class RedisRateLimiterRepository implements RateLimiterRepository {
     }
 
     @Override
-    public RateLimitState obtain(String key) {
+    public Optional<RateLimitState> get(String key) {
         return null;
     }
 

@@ -13,7 +13,7 @@ class RateLimiterFactory {
 
     RateLimiterFactory(RateLimiterRepository repository,
                        @Value("${throttler.token-bucket.capacity:100}") int capacity,
-                       @Value("${throttler.token-bucket.refill-tokens-per-second:100}") long refillTokensPerSecond) {
+                       @Value("${throttler.token-bucket.refill-tokens-per-second:2}") long refillTokensPerSecond) {
         this.repository = repository;
         this.capacity = capacity;
         this.refillTokensPerSecond = refillTokensPerSecond;

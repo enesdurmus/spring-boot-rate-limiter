@@ -14,11 +14,6 @@
     <dependencies>
         <dependency>
             <groupId>com.endu.throttler</groupId>
-            <artifactId>spring-boot-throttler-core</artifactId>
-            <version>0.0.1-SNAPSHOT</version>
-        </dependency>
-        <dependency>
-            <groupId>com.endu.throttler</groupId>
             <artifactId>spring-boot-throttler-inmemory</artifactId>
             <version>0.0.1-SNAPSHOT</version>
         </dependency>

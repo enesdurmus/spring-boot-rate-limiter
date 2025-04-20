@@ -13,6 +13,7 @@ class ThrottlerAutoConfig {
         FilterRegistrationBean<RateLimitFilter> registrationBean = new FilterRegistrationBean<>();
         registrationBean.setFilter(new RateLimitFilter(rateLimiter));
         registrationBean.setOrder(1);
+        registrationBean.addUrlPatterns("/*");
         return registrationBean;
     }
 

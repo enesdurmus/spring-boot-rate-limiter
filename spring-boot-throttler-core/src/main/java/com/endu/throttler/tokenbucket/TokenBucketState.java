@@ -3,6 +3,7 @@ package com.endu.throttler.tokenbucket;
 import com.endu.throttler.RateLimitState;
 
 import java.time.Instant;
+import java.util.Objects;
 
 class TokenBucketState implements RateLimitState {
 
@@ -28,5 +29,25 @@ class TokenBucketState implements RateLimitState {
 
     public void setTokens(long tokens) {
         this.tokens = tokens;
+    }
+
+    @Override
+    public String toString() {
+        return "TokenBucketState{" +
+               "tokens=" + tokens +
+               ", lastRefillTimestamp=" + lastRefillTimestamp +
+               '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (o == null || getClass() != o.getClass()) return false;
+        TokenBucketState state = (TokenBucketState) o;
+        return tokens == state.tokens && Objects.equals(lastRefillTimestamp, state.lastRefillTimestamp);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(tokens, lastRefillTimestamp);
     }
 }

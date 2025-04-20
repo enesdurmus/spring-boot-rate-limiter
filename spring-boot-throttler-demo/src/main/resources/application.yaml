@@ -1,0 +1,8 @@
+logging:
+  level:
+    root: debug
+
+throttler:
+  token-bucket:
+    capacity: 2
+    refill-tokens-per-second: 1

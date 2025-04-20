@@ -1,10 +1,12 @@
 package com.endu.throttler;
 
+import java.util.Optional;
+
 public interface RateLimiterRepository {
 
     void save(String key, RateLimitState value);
 
-    RateLimitState obtain(String key);
+    Optional<RateLimitState> get(String key);
 
     void delete(String key);
 
