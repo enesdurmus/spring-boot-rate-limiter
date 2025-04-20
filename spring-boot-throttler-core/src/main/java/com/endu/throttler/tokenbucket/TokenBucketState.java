@@ -50,4 +50,5 @@ class TokenBucketState implements RateLimitState {
     public int hashCode() {
         return Objects.hash(tokens, lastRefillTimestamp);
     }
+
 }

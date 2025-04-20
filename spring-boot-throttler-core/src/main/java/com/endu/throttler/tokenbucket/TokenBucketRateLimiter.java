@@ -1,6 +1,5 @@
 package com.endu.throttler.tokenbucket;
 
-import com.endu.throttler.RateLimitAlgorithm;
 import com.endu.throttler.RateLimiter;
 import com.endu.throttler.RateLimiterRepository;
 import org.slf4j.Logger;
@@ -44,11 +43,6 @@ public class TokenBucketRateLimiter implements RateLimiter {
         }
 
         return false;
-    }
-
-    @Override
-    public RateLimitAlgorithm getAlgorithm() {
-        return RateLimitAlgorithm.TOKEN_BUCKET;
     }
 
     private TokenBucketState refill(TokenBucketState bucket) {

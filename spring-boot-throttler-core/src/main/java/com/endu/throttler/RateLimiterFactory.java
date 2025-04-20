@@ -1,30 +1,28 @@
 package com.endu.throttler;
 
-import com.endu.throttler.tokenbucket.TokenBucketRateLimiter;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
+
+import java.util.List;
+import java.util.Map;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 @Component
 class RateLimiterFactory {
 
-    private final RateLimiterRepository repository;
-    private final int capacity;
-    private final long refillTokensPerSecond;
+    private final Map<RateLimitAlgorithm, RateLimiterProvider> providerMap;
 
-    RateLimiterFactory(RateLimiterRepository repository,
-                       @Value("${throttler.token-bucket.capacity:100}") int capacity,
-                       @Value("${throttler.token-bucket.refill-tokens-per-second:2}") long refillTokensPerSecond) {
-        this.repository = repository;
-        this.capacity = capacity;
-        this.refillTokensPerSecond = refillTokensPerSecond;
+    public RateLimiterFactory(List<RateLimiterProvider> providers) {
+        this.providerMap = providers.stream()
+                .collect(Collectors.toMap(RateLimiterProvider::getAlgorithm, Function.identity()));
     }
 
+
     RateLimiter create(RateLimitAlgorithm algorithm) {
-        switch (algorithm) {
-            case TOKEN_BUCKET:
-                return new TokenBucketRateLimiter(repository, capacity, refillTokensPerSecond);
-            default:
-                throw new IllegalArgumentException("Unsupported rate limit algorithm: " + algorithm);
+        RateLimiterProvider provider = providerMap.get(algorithm);
+        if (provider == null) {
+            throw new IllegalArgumentException("Unsupported algorithm: " + algorithm);
         }
+        return provider.create();
     }
 }
