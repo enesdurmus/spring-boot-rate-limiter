@@ -14,7 +14,7 @@
     <dependencies>
         <dependency>
             <groupId>com.endu.throttler</groupId>
-            <artifactId>spring-boot-throttler-inmemory</artifactId>
+            <artifactId>spring-boot-throttler-redis</artifactId>
             <version>0.0.1-SNAPSHOT</version>
         </dependency>
     </dependencies>

@@ -19,8 +19,8 @@ class InMemoryRateLimiterRepository implements RateLimiterRepository {
 
     private final Cache<String, RateLimitState> cache;
 
-    InMemoryRateLimiterRepository(@Value("${throttler.token-bucket.expire-after-access:PT10M}") Duration expireAfterAccess,
-                                  @Value("${throttler.token-bucket.maximum-size:10000}") int maximumSize) {
+    InMemoryRateLimiterRepository(@Value("${throttler.repository.in-memory.expire-after-access:PT10M}") Duration expireAfterAccess,
+                                  @Value("${throttler.repository.in-memory.maximum-size:10000}") int maximumSize) {
         this.cache = Caffeine.newBuilder()
                 .expireAfterAccess(expireAfterAccess)
                 .maximumSize(maximumSize)

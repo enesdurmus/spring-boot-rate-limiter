@@ -5,7 +5,7 @@ import com.endu.throttler.RateLimitState;
 import java.time.Instant;
 import java.util.Objects;
 
-class TokenBucketState implements RateLimitState {
+public class TokenBucketState implements RateLimitState {
 
     private long tokens;
     private Instant lastRefillTimestamp;
@@ -29,6 +29,11 @@ class TokenBucketState implements RateLimitState {
 
     public void setTokens(long tokens) {
         this.tokens = tokens;
+    }
+
+    @Override
+    public Instant updatedAt() {
+        return lastRefillTimestamp;
     }
 
     @Override

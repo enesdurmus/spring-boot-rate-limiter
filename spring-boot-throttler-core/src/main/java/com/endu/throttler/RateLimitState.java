@@ -1,4 +1,10 @@
 package com.endu.throttler;
 
-public interface RateLimitState {
+import java.io.Serializable;
+import java.time.Instant;
+
+public interface RateLimitState extends Serializable {
+
+    Instant updatedAt();
+
 }

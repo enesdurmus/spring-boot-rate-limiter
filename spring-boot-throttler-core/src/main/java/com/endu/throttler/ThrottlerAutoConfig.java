@@ -1,6 +1,5 @@
 package com.endu.throttler;
 
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -18,9 +17,10 @@ class ThrottlerAutoConfig {
     }
 
     @Bean
-    RateLimiter rateLimiter(RateLimiterFactory factory,
-                            @Value("${throttler.algorithm:TOKEN_BUCKET}") RateLimitAlgorithm algorithm) {
-        return factory.create(algorithm);
+    RateLimiter rateLimiter(RateLimiterResolver rateLimiterResolver,
+                            RateLimiterRepository rateLimiterRepository) {
+        return rateLimiterResolver.getProvider().create(rateLimiterRepository);
     }
+
 
 }

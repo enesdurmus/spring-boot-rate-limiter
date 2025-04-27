@@ -10,14 +10,11 @@ import org.springframework.stereotype.Component;
 @Component
 class TokenBucketProvider implements RateLimiterProvider {
 
-    private final RateLimiterRepository repository;
     private final int capacity;
     private final long refillTokensPerSecond;
 
-    TokenBucketProvider(RateLimiterRepository repository,
-                        @Value("${throttler.token-bucket.capacity:100}") int capacity,
+    TokenBucketProvider(@Value("${throttler.token-bucket.capacity:100}") int capacity,
                         @Value("${throttler.token-bucket.refill-tokens-per-second:2}") long refillTokensPerSecond) {
-        this.repository = repository;
         this.capacity = capacity;
         this.refillTokensPerSecond = refillTokensPerSecond;
     }
@@ -28,8 +25,13 @@ class TokenBucketProvider implements RateLimiterProvider {
     }
 
     @Override
-    public RateLimiter create() {
+    public RateLimiter create(RateLimiterRepository repository) {
         return new TokenBucketRateLimiter(repository, capacity, refillTokensPerSecond);
+    }
+
+    @Override
+    public Class<? extends TokenBucketState> getStateClass() {
+        return TokenBucketState.class;
     }
 
 }
