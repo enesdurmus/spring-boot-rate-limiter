@@ -28,7 +28,7 @@ class RedisRateLimiterRepository<T extends RateLimitState> implements RateLimite
     public void save(String key, RateLimitState state) {
         try {
             String json = objectMapper.writeValueAsString(state);
-            hashOperations.putIfAbsent(HASH_KEY, key, json);
+            hashOperations.put(HASH_KEY, key, json);
         } catch (Exception e) {
             throw new ThrottlerRedisException("Failed to serialize object");
         }
