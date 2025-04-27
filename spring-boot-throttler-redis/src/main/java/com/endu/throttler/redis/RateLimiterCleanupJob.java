@@ -17,9 +17,11 @@ class RateLimiterCleanupJob {
 
     private static final Logger log = LoggerFactory.getLogger(RateLimiterCleanupJob.class);
 
-    private static final long INACTIVITY_THRESHOLD_MILLIS = Duration.ofMinutes(30).toMillis();
-    private static final int DELETE_BATCH_SIZE = 100;
     private static final String LOCK_KEY = "throttler:cleanup";
+    private static final long INACTIVITY_THRESHOLD_MILLIS = Duration.ofMinutes(30).toMillis();
+    private static final int DELETE_BATCH_SIZE = 500;
+    private static final int SCAN_BATCH_SIZE = 100;
+    private static final Duration LOCK_DURATION = Duration.ofMinutes(5);
 
     private final RedisTemplate<String, String> redisTemplate;
     private final RedisDistributedLock lockService;
@@ -32,14 +34,14 @@ class RateLimiterCleanupJob {
 
     @Scheduled(cron = "0 */30 * * * *")
     public void clean() {
-        if (!lockService.acquireLock(LOCK_KEY, Duration.ofMinutes(5))) {
+        if (!lockService.acquireLock(LOCK_KEY, LOCK_DURATION)) {
             return;
         }
 
         final String hashKey = RedisRateLimiterRepository.HASH_KEY;
 
         try (Cursor<Map.Entry<Object, Object>> cursor = redisTemplate.opsForHash()
-                .scan(hashKey, ScanOptions.scanOptions().count(100).build())) {
+                .scan(hashKey, ScanOptions.scanOptions().count(SCAN_BATCH_SIZE).build())) {
 
             long now = System.currentTimeMillis();
             List<Object> inactiveStates = new ArrayList<>();
