@@ -2,10 +2,14 @@ package com.endu.throttler.tokenbucket;
 
 import com.endu.throttler.RateLimitState;
 
+import java.io.Serial;
 import java.time.Instant;
 import java.util.Objects;
 
 public class TokenBucketState implements RateLimitState {
+
+    @Serial
+    private static final long serialVersionUID = 1L;
 
     private long tokens;
     private Instant lastRefillTimestamp;
