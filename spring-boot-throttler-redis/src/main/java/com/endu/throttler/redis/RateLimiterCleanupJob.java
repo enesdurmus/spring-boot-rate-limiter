@@ -7,14 +7,12 @@ import org.springframework.data.redis.core.Cursor;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.ScanOptions;
 import org.springframework.scheduling.annotation.Scheduled;
-import org.springframework.stereotype.Component;
 
 import java.time.Duration;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-@Component
 class RateLimiterCleanupJob {
 
     private static final Logger log = LoggerFactory.getLogger(RateLimiterCleanupJob.class);

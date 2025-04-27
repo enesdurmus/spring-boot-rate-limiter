@@ -6,21 +6,18 @@ import com.github.benmanes.caffeine.cache.Cache;
 import com.github.benmanes.caffeine.cache.Caffeine;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Repository;
 
 import java.time.Duration;
 import java.util.Optional;
 
-@Repository
 class InMemoryRateLimiterRepository implements RateLimiterRepository {
 
     private static final Logger log = LoggerFactory.getLogger(InMemoryRateLimiterRepository.class);
 
     private final Cache<String, RateLimitState> cache;
 
-    InMemoryRateLimiterRepository(@Value("${throttler.repository.in-memory.expire-after-access:PT10M}") Duration expireAfterAccess,
-                                  @Value("${throttler.repository.in-memory.maximum-size:10000}") int maximumSize) {
+    InMemoryRateLimiterRepository(Duration expireAfterAccess,
+                                  int maximumSize) {
         this.cache = Caffeine.newBuilder()
                 .expireAfterAccess(expireAfterAccess)
                 .maximumSize(maximumSize)

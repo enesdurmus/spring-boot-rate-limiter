@@ -6,3 +6,4 @@ throttler:
   token-bucket:
     capacity: 2
     refill-tokens-per-second: 1
+  store-type: in-memory

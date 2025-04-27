@@ -1,16 +1,14 @@
 package com.endu.throttler.redis;
 
 import org.springframework.data.redis.core.RedisTemplate;
-import org.springframework.stereotype.Component;
 
 import java.time.Duration;
 
-@Component
 class RedisDistributedLock {
 
-    private final RedisTemplate<String, Object> redisTemplate;
+    private final RedisTemplate<String, String> redisTemplate;
 
-    RedisDistributedLock(RedisTemplate<String, Object> redisTemplate) {
+    RedisDistributedLock(RedisTemplate<String, String> redisTemplate) {
         this.redisTemplate = redisTemplate;
     }
 

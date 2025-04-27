@@ -26,7 +26,8 @@
 		<module>spring-boot-throttler-inmemory</module>
 		<module>spring-boot-throttler-redis</module>
 		<module>spring-boot-throttler-demo</module>
-	</modules>
+        <module>spring-boot-throttler-starter</module>
+    </modules>
 	<scm>
 		<connection/>
 		<developerConnection/>
