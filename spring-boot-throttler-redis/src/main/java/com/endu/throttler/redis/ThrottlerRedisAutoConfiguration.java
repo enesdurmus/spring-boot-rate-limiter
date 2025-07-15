@@ -10,7 +10,7 @@ import org.springframework.data.redis.core.RedisTemplate;
 
 @Configuration
 @ConditionalOnBean(RedisTemplate.class)
-@ConditionalOnProperty(prefix = "throttler", name = "store-type", havingValue = "redis", matchIfMissing = true)
+@ConditionalOnProperty(name = "throttler.store-type", havingValue = "redis", matchIfMissing = true)
 public class ThrottlerRedisAutoConfiguration {
 
     @Bean
