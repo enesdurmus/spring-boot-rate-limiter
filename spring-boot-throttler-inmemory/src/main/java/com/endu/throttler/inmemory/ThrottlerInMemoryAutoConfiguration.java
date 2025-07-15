@@ -8,7 +8,7 @@ import org.springframework.context.annotation.Configuration;
 import java.time.Duration;
 
 @Configuration
-@ConditionalOnProperty(prefix = "throttler", name = "store-type", havingValue = "in-memory")
+@ConditionalOnProperty(name = "throttler.store-type", havingValue = "in-memory")
 public class ThrottlerInMemoryAutoConfiguration {
 
     @Bean

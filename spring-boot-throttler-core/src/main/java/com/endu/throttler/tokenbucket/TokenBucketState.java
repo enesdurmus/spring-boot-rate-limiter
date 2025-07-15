@@ -14,7 +14,7 @@ public class TokenBucketState implements RateLimitState {
     private long tokens;
     private Instant lastRefillTimestamp;
 
-    TokenBucketState(long tokens, Instant lastRefillTimestamp) {
+    public TokenBucketState(long tokens, Instant lastRefillTimestamp) {
         this.tokens = tokens;
         this.lastRefillTimestamp = lastRefillTimestamp;
     }

@@ -5,7 +5,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 @Configuration
-class ThrottlerAutoConfig {
+class ThrottlerAutoConfiguration {
 
     @Bean
     FilterRegistrationBean<RateLimitFilter> rateLimitFilter(RateLimiter rateLimiter) {
