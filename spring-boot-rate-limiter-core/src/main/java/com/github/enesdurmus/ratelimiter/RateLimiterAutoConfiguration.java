@@ -1,0 +1,33 @@
+package com.github.enesdurmus.ratelimiter;
+
+import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
+import org.springframework.boot.web.servlet.FilterRegistrationBean;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+
+@Configuration
+class RateLimiterAutoConfiguration {
+
+    @Bean
+    FilterRegistrationBean<RateLimitFilter> rateLimitFilter(RateLimiter rateLimiter,
+                                                            ClientIdProvider clientIdProvider) {
+        FilterRegistrationBean<RateLimitFilter> registrationBean = new FilterRegistrationBean<>();
+        registrationBean.setFilter(new RateLimitFilter(rateLimiter, clientIdProvider));
+        registrationBean.setOrder(1);
+        registrationBean.addUrlPatterns("/*");
+        return registrationBean;
+    }
+
+    @Bean
+    RateLimiter rateLimiter(RateLimiterResolver rateLimiterResolver,
+                            RateLimiterRepository rateLimiterRepository) {
+        return rateLimiterResolver.getProvider().create(rateLimiterRepository);
+    }
+
+    @Bean
+    @ConditionalOnMissingBean(ClientIdProvider.class)
+    public ClientIdProvider clientIdProvider() {
+        return new RemoteAddressClientIdProvider();
+    }
+
+}

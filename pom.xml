@@ -8,12 +8,12 @@
 		<version>3.4.4</version>
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
-	<groupId>com.endu.throttler</groupId>
-	<artifactId>spring-boot-throttler-parent</artifactId>
-	<version>${revision}</version>
+	<groupId>com.github.enesdurmus.ratelimiter</groupId>
+	<artifactId>spring-boot-rate-limiter-parent</artifactId>
+	<version>1.0.0</version>
 	<packaging>pom</packaging>
-	<name>spring-boot-throttler</name>
-	<description>Spring boot throttler</description>
+	<name>spring-boot-rate-limiter</name>
+	<description>Spring boot rate limiter</description>
 	<url/>
 	<licenses>
 		<license/>
@@ -26,11 +26,11 @@
 		</developer>
 	</developers>
 	<modules>
-		<module>spring-boot-throttler-core</module>
-		<module>spring-boot-throttler-inmemory</module>
-		<module>spring-boot-throttler-redis</module>
-		<module>spring-boot-throttler-demo</module>
-        <module>spring-boot-throttler-starter</module>
+		<module>spring-boot-rate-limiter-core</module>
+		<module>spring-boot-rate-limiter-inmemory</module>
+		<module>spring-boot-rate-limiter-redis</module>
+		<module>spring-boot-rate-limiter-demo</module>
+        <module>spring-boot-rate-limiter-starter</module>
     </modules>
 	<scm>
 		<connection/>
