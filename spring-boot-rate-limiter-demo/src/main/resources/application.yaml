@@ -6,4 +6,9 @@ rate-limiter:
   token-bucket:
     capacity: 2
     refill-tokens-per-second: 1
-  store-type: redis
+  store-type: in-memory
+  exclude-paths:
+    - /public/**
+    - /swagger-ui/**
+    - /v3/api-docs/**
+    - /actuator/**

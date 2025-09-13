@@ -6,10 +6,14 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.http.server.PathContainer;
 import org.springframework.lang.NonNull;
 import org.springframework.web.filter.OncePerRequestFilter;
+import org.springframework.web.util.pattern.PathPattern;
+import org.springframework.web.util.pattern.PathPatternParser;
 
 import java.io.IOException;
+import java.util.List;
 
 public class RateLimitFilter extends OncePerRequestFilter {
 
@@ -17,11 +21,16 @@ public class RateLimitFilter extends OncePerRequestFilter {
 
     private final RateLimiter rateLimiter;
     private final ClientIdProvider clientIdProvider;
+    private final List<PathPattern> excludePatterns;
 
     public RateLimitFilter(RateLimiter rateLimiter,
-                           ClientIdProvider clientIdProvider) {
+                           ClientIdProvider clientIdProvider,
+                           List<String> excludePaths) {
         this.rateLimiter = rateLimiter;
         this.clientIdProvider = clientIdProvider;
+        this.excludePatterns = excludePaths.stream()
+                .map(pattern -> new PathPatternParser().parse(pattern))
+                .toList();
     }
 
     @Override
@@ -45,5 +54,12 @@ public class RateLimitFilter extends OncePerRequestFilter {
 
     private boolean isAllowed(String clientId) {
         return rateLimiter.isAllowed(clientId);
+    }
+
+    @Override
+    protected boolean shouldNotFilter(HttpServletRequest request) {
+        PathContainer pathContainer = PathContainer.parsePath(request.getRequestURI());
+        return excludePatterns.stream()
+                .anyMatch(pattern -> pattern.matches(pathContainer));
     }
 }

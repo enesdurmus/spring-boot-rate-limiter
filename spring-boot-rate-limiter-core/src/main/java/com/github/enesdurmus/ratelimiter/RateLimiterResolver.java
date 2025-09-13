@@ -1,6 +1,5 @@
 package com.github.enesdurmus.ratelimiter;
 
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
@@ -15,10 +14,10 @@ public class RateLimiterResolver {
     private final RateLimitAlgorithm algorithm;
 
     public RateLimiterResolver(List<RateLimiterProvider> providers,
-                               @Value("${rate-limiter.algorithm:TOKEN_BUCKET}") RateLimitAlgorithm algorithm) {
+                               RateLimiterProperties properties) {
         this.providerMap = providers.stream()
                 .collect(Collectors.toMap(RateLimiterProvider::getAlgorithm, Function.identity()));
-        this.algorithm = algorithm;
+        this.algorithm = properties.getAlgorithm();
     }
 
     public RateLimiterProvider getProvider() {

@@ -10,9 +10,10 @@ class RateLimiterAutoConfiguration {
 
     @Bean
     FilterRegistrationBean<RateLimitFilter> rateLimitFilter(RateLimiter rateLimiter,
-                                                            ClientIdProvider clientIdProvider) {
+                                                            ClientIdProvider clientIdProvider,
+                                                            RateLimiterProperties rateLimiterProperties) {
         FilterRegistrationBean<RateLimitFilter> registrationBean = new FilterRegistrationBean<>();
-        registrationBean.setFilter(new RateLimitFilter(rateLimiter, clientIdProvider));
+        registrationBean.setFilter(new RateLimitFilter(rateLimiter, clientIdProvider, rateLimiterProperties.getExcludePaths()));
         registrationBean.setOrder(1);
         registrationBean.addUrlPatterns("/*");
         return registrationBean;

@@ -2,21 +2,18 @@ package com.github.enesdurmus.ratelimiter.tokenbucket;
 
 import com.github.enesdurmus.ratelimiter.RateLimitAlgorithm;
 import com.github.enesdurmus.ratelimiter.RateLimiter;
+import com.github.enesdurmus.ratelimiter.RateLimiterProperties;
 import com.github.enesdurmus.ratelimiter.RateLimiterProvider;
 import com.github.enesdurmus.ratelimiter.RateLimiterRepository;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 @Component
 class TokenBucketProvider implements RateLimiterProvider {
 
-    private final int capacity;
-    private final long refillTokensPerSecond;
+    private final TokenBucketProperties properties;
 
-    TokenBucketProvider(@Value("${throttler.token-bucket.capacity:100}") int capacity,
-                        @Value("${throttler.token-bucket.refill-tokens-per-second:2}") long refillTokensPerSecond) {
-        this.capacity = capacity;
-        this.refillTokensPerSecond = refillTokensPerSecond;
+    TokenBucketProvider(RateLimiterProperties properties) {
+        this.properties = properties.getTokenBucket();
     }
 
     @Override
@@ -26,7 +23,7 @@ class TokenBucketProvider implements RateLimiterProvider {
 
     @Override
     public RateLimiter create(RateLimiterRepository repository) {
-        return new TokenBucketRateLimiter(repository, capacity, refillTokensPerSecond);
+        return new TokenBucketRateLimiter(repository, properties.getCapacity(), properties.getRefillTokensPerSecond());
     }
 
     @Override
